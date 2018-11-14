@@ -10,10 +10,12 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,11 +45,11 @@ public class Login_Activity extends AppCompatActivity  {
         setContentView(R.layout.activity_login);
         Button btnLogin = findViewById(R.id.email_sign_in_button);
         TextView txt_signup = (findViewById(R.id.txt_signup));
-      final  EditText userEmail = (findViewById(R.id.editTxt_email));
-      final  EditText userPassword = (findViewById(R.id.edittxt_pass));
+        editTextUsername  = (EditText) (findViewById(R.id.editTxt_email));
+        editTextPassword  = (EditText) (findViewById(R.id.edittxt_pass));
       final RadioGroup rg = (findViewById(R.id.pop_up_radioGroup));
 
-        userEmail.addTextChangedListener(new TextWatcher() {
+        editTextUsername.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -65,7 +67,7 @@ public class Login_Activity extends AppCompatActivity  {
         });
 
 
-        userPassword.addTextChangedListener(new TextWatcher() {
+        editTextPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -150,16 +152,14 @@ public class Login_Activity extends AppCompatActivity  {
 
         Log.i("radio_button_selected",String.valueOf(rg.getCheckedRadioButtonId()));
 
-       /* View popupView = layoutInflater.inflate(R.layout.popup, null);
-        final PopupWindow popupWindow = new PopupWindow(
-                popupView,
-                LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT);
+        LayoutInflater layoutInflater = LayoutInflater.from(Login_Activity.this);
+        View popupView = layoutInflater.inflate(R.layout.popup, null);
 
-        Button btnDismiss = (Button)popupView.findViewById(R.id.dismiss);
-        btnDismiss.setOnClickListener(new Button.OnClickListener(){
+         Button submit = (Button) popupView.findViewById(R.id.pop_up_submit);
 
-       *//* Submit.setEnabled(true);*//*
+
+
+        Submit.setEnabled(true);
         Submit.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -183,7 +183,7 @@ public class Login_Activity extends AppCompatActivity  {
                 startActivity(intent);
 
             }
-        });*/
+        });
         MyDialog.show();
     }
 
@@ -204,86 +204,90 @@ public class Login_Activity extends AppCompatActivity  {
             editTextPassword.requestFocus();
             return;
         }
-        class UserLogin extends AsyncTask<Void, Void, String> {
 
-            ProgressDialog pdLoading = new ProgressDialog(Login_Activity.this);
+        UserLogin ul=new UserLogin();
+        ul.execute();
 
-
-            @Override
-            protected String doInBackground(Void... voids) {
-                //creating request handler object
-                RequestHandler requestHandler = new RequestHandler();
-
-                //creating request parameters
-                HashMap<String, String> params = new HashMap<>();
-                params.put("username", username);
-                params.put("password", password);
-                params.put("user_type",String.valueOf(userType));
+    }
 
 
-                //returing the response
-                return requestHandler.sendPostRequest(URLs.URL_LOGIN, params);
-            }
+    class UserLogin extends AsyncTask<Void, Void, String> {
 
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-
-                //this method will be running on UI thread
-                pdLoading.setMessage("\tLoading...");
-                pdLoading.setCancelable(false);
-                pdLoading.show();
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                pdLoading.dismiss();
+        ProgressDialog pdLoading = new ProgressDialog(Login_Activity.this);
 
 
-                try {
-                    //converting response to json object
-                    JSONObject obj = new JSONObject(s);
-                    if (!obj.getBoolean("error")) {
-                        //  Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+        @Override
+        protected String doInBackground(Void... voids) {
+            //creating request handler object
+            RequestHandler requestHandler = new RequestHandler();
 
-                        //getting the user from the response
-                        JSONObject userJson = obj.getJSONObject("user");
-
-                        //creating a new user object
-                        User user = new User(
-                                userJson.getInt("Id"),
-                                userJson.getString("Email"),
-                                userJson.getString("FName"),
-                                userJson.getString("LName"),
-                                userJson.getString("Address"),
-                                userJson.getString("Province"),
-                                userJson.getString("Country"),
-                                userJson.getString("Pincode"),
-                                userJson.getString("Phone") ,
-                                userJson.getString("usertType")
-
-                        );
-                        //storing the user in shared preferences
-                       SharedPrefManager.getInstance(getApplicationContext()).userLogin(user);
+            //creating request parameters
+            HashMap<String, String> params = new HashMap<>();
+            params.put("username", editTextUsername.getText().toString());
+            params.put("password", editTextPassword.getText().toString());
+            params.put("user_type",String.valueOf(userType));
 
 
+            //returing the response
+            return requestHandler.sendPostRequest(URLs.URL_LOGIN, params);
+        }
 
-                        //starting the profile activity
-                        finish();
-                      //startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Invalid username or password", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            //this method will be running on UI thread
+            pdLoading.setMessage("\tLoading...");
+            pdLoading.setCancelable(false);
+            pdLoading.show();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            pdLoading.dismiss();
+
+
+            try {
+                //converting response to json object
+                JSONObject obj = new JSONObject(s);
+                if (!obj.getBoolean("error")) {
+
+                    Toast.makeText(getApplicationContext(), String.valueOf(obj), Toast.LENGTH_LONG).show();
+
+                    //getting the user from the response
+                    JSONObject userJson = obj.getJSONObject("user");
+
+                    //creating a new user object
+                    User user = new User(
+                            userJson.getInt("Id"),
+                            userJson.getString("Email"),
+                            userJson.getString("FName"),
+                            userJson.getString("LName"),
+                            userJson.getString("Address"),
+                            userJson.getString("Province"),
+                            userJson.getString("Country"),
+                            userJson.getString("Pincode"),
+                            userJson.getString("Phone") ,
+                            userJson.getString("usertType")
+
+                    );
+                    //storing the user in shared preferences
+                    SharedPrefManager.getInstance(getApplicationContext()).userLogin(user);
+
+
+
+                    //starting the profile activity
+                    finish();
+                    //startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                } else {
+                    Toast.makeText(getApplicationContext(), "Invalid username or password", Toast.LENGTH_SHORT).show();
                 }
-
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
 
         }
-        UserLogin ul=new UserLogin();
-        ul.execute();
 
     }
 
