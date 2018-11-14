@@ -26,6 +26,7 @@
     <string name="buyer_confirm_pass">Confirm Password</string>
     <string name="buyer_phone">Enter Phone number</string>
     <string name="Sign_up_btn_txt">Sign Up</string>
+    <string name="txt_submit">SUBMIT</string>
 
     <string-array name="values_provinces">
 

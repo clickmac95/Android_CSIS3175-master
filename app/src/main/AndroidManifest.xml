@@ -20,7 +20,8 @@
             />
         </activity>
         <activity android:name=".bid_creator.Bid_Creator_Activity_page2" />
-        <activity android:name=".Login_Activity">
+        <activity android:name=".Login_Activity"
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

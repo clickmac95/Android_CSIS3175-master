@@ -1,17 +1,17 @@
 package com.example.a300288081.auction_app;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
@@ -45,7 +45,7 @@ public class Login_Activity extends AppCompatActivity  {
         TextView txt_signup = (findViewById(R.id.txt_signup));
       final  EditText userEmail = (findViewById(R.id.editTxt_email));
       final  EditText userPassword = (findViewById(R.id.edittxt_pass));
-      final RadioGroup rg = (findViewById(R.id.radioGroup));
+      final RadioGroup rg = (findViewById(R.id.pop_up_radioGroup));
 
         userEmail.addTextChangedListener(new TextWatcher() {
             @Override
@@ -123,20 +123,68 @@ public class Login_Activity extends AppCompatActivity  {
         txt_signup.setOnClickListener(new View.OnClickListener() {
 
             // implement code for custom dialog box to proceed as bidder or bic creator
-
-
-
-
-            @Override
+            // @Override
             public void onClick(View v) {
-                Intent i = new Intent(Login_Activity.this, Register_Activity_page1.class);
-                startActivity(i);
+                MyCustomAlertDialog();
             }
         });
 
         //showAlertDialog();
 
 
+    }
+
+
+
+
+    public void MyCustomAlertDialog()
+    {
+        Dialog MyDialog = new Dialog(Login_Activity.this);
+        MyDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        MyDialog.setContentView(R.layout.popup);
+        MyDialog.setTitle("My PopUp");
+
+              Button  Submit = findViewById(R.id.pop_up_submit);
+        final RadioGroup rg = (findViewById(R.id.pop_up_radioGroup));
+
+
+        Log.i("radio_button_selected",String.valueOf(rg.getCheckedRadioButtonId()));
+
+       /* View popupView = layoutInflater.inflate(R.layout.popup, null);
+        final PopupWindow popupWindow = new PopupWindow(
+                popupView,
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT);
+
+        Button btnDismiss = (Button)popupView.findViewById(R.id.dismiss);
+        btnDismiss.setOnClickListener(new Button.OnClickListener(){
+
+       *//* Submit.setEnabled(true);*//*
+        Submit.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                int selectedId = rg.getCheckedRadioButtonId();
+                Intent intent = new Intent(Login_Activity.this,App_home_Nav_Activity.class);
+                if(selectedId == R.id.pop_up_bidCreator)
+                {
+
+
+
+                    intent.putExtra("USER_Type", 0);
+//starting the activity
+
+                }
+                else if(selectedId == R.id.pop_up_rad_btn_bidder)
+                {
+                    intent.putExtra("USER_Type", 1);
+                }
+                startActivity(intent);
+
+            }
+        });*/
+        MyDialog.show();
     }
 
     private void userLogin() {
@@ -223,7 +271,7 @@ public class Login_Activity extends AppCompatActivity  {
 
                         //starting the profile activity
                         finish();
-                      //  startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                      //startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                     } else {
                         Toast.makeText(getApplicationContext(), "Invalid username or password", Toast.LENGTH_SHORT).show();
                     }
