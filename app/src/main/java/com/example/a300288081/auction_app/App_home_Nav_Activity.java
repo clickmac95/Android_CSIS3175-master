@@ -1,6 +1,8 @@
 package com.example.a300288081.auction_app;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -13,8 +15,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class App_home_Nav_Activity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class App_home_Nav_Activity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,31 +43,65 @@ public class App_home_Nav_Activity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        SharedPreferences settins = PreferenceManager
+                .getDefaultSharedPreferences(App_home_Nav_Activity.this);
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         Menu menu = navigationView.getMenu();
+        //Change the menu items according to the user type
+
+        // 0 - bidder menu
+        // 1 - bid creator
+        if(settins.getString("userType","00").equals("0")  ) {
+
+
+
 // -------- code to change navigation menu items according to user type-----------
-        // find MenuItem you want to change
+            // find MenuItem you want to change
 
-        MenuItem nav_item_one = menu.findItem(R.id.navt_item_one);
+            MenuItem nav_item_one = menu.findItem(R.id.navt_item_one);
 
-        // set new title to the MenuItem
-        nav_item_one.setTitle("Home");
+            // set new title to the MenuItem
+            nav_item_one.setTitle("Home");
 
-        // do the same for other MenuItems
-        MenuItem nav_item_two = menu.findItem(R.id.nav_item_two);
-        nav_item_two.setTitle("Add New Bid");
-
-
-        MenuItem nav_item_three = menu.findItem(R.id.nav_item_three);
-        nav_item_three.setTitle("History");
-
-        MenuItem nav_item_four = menu.findItem(R.id.nav_item_four);
-        nav_item_four.setTitle("Profile Settings");
-
-        MenuItem nav_item_five = menu.findItem(R.id.nav_item_five);
-        nav_item_five.setTitle("Logout");
+            // do the same for other MenuItems
+            MenuItem nav_item_two = menu.findItem(R.id.nav_item_two);
+            nav_item_two.setTitle("Categories");
 
 
+            MenuItem nav_item_three = menu.findItem(R.id.nav_item_three);
+            nav_item_three.setTitle("History");
+
+            MenuItem nav_item_four = menu.findItem(R.id.nav_item_four);
+            nav_item_four.setTitle("Profile Settings");
+
+            MenuItem nav_item_five = menu.findItem(R.id.nav_item_five);
+            nav_item_five.setTitle("Logout");
+
+        }
+
+
+        else
+        {
+            MenuItem nav_item_one = menu.findItem(R.id.navt_item_one);
+
+            // set new title to the MenuItem
+            nav_item_one.setTitle("Home");
+
+            // do the same for other MenuItems
+            MenuItem nav_item_two = menu.findItem(R.id.nav_item_two);
+            nav_item_two.setTitle("Add new Bid");
+
+
+            MenuItem nav_item_three = menu.findItem(R.id.nav_item_three);
+            nav_item_three.setTitle("History");
+
+            MenuItem nav_item_four = menu.findItem(R.id.nav_item_four);
+            nav_item_four.setTitle("Profile Settings");
+
+            MenuItem nav_item_five = menu.findItem(R.id.nav_item_five);
+            nav_item_five.setTitle("Logout");
+        }
 
 
 

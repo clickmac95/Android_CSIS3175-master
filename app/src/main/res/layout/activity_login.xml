@@ -14,13 +14,7 @@
     tools:context=".Login_Activity">
 
     <!-- Login progress -->
-    <ProgressBar
-        android:id="@+id/login_progress"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone" />
+
 
     <ScrollView
         android:id="@+id/login_form"
@@ -89,7 +83,8 @@
                     android:id="@+id/editTxt_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/buyer_email" />
+                    android:hint="@string/buyer_email"
+                    android:inputType="textWebEmailAddress"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -107,7 +102,8 @@
                     android:id="@+id/edittxt_pass"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/buyer_password" />
+                    android:hint="@string/buyer_password"
+                    android:inputType="textPassword"/>
 
             </android.support.design.widget.TextInputLayout>
 
